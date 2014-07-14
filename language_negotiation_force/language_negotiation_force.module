@@ -1,0 +1,36 @@
+<?php
+/**
+ * @file
+ * Code for Language negotiation force module.
+ */
+
+
+/**
+ * Implements hook_language_negotiation_info().
+ *
+ * Creates a detection method that forces the use of Spanish.
+ */
+
+function language_negotiation_force_language_negotiation_info() {
+  return array(
+    'force_language' => array(
+      'callbacks' => array(
+        'language' => 'language_negotiation_force_language_callback',
+      ),
+      'file' => drupal_get_path('module', 'language_negotiation_force') . '/language_negotiation_force.module',
+      'weight' => -20,
+      'name' => t('Force Spanish language'),
+      'description' => t('Forces the use of Spanish language as default.'),
+      'cache' => 0,
+    ),
+  );
+}
+
+/**
+ * Callback for language selection in language_negotiation_force_language_negotiation_info.
+ * It forces the use of Spanish.
+ * @return string
+ */
+function language_negotiation_force_language_callback() {
+  return 'es';
+}

@@ -1,0 +1,7 @@
+name = Language negotiation: force language.
+description = Provides a language negotation method which forces a language.
+core = 7.x
+package = Locale
+version = 7.x-1.0
+project = feature_fvf_core
+dependencies[] = locale
