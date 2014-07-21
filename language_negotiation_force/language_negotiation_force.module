@@ -4,11 +4,28 @@
  * Code for Language negotiation force module.
  */
 
+/**
+ * Implements hook_menu().
+ */
+function language_negotiation_force_menu() {
+  $items = array();
+
+  $items['admin/config/regional/language/configure/force'] = array(
+    'title' => 'Force language configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_negotiation_force_form'),
+    'access arguments' => array('administer languages'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+  );
+
+
+  return $items;
+}
 
 /**
  * Implements hook_language_negotiation_info().
  *
- * Creates a detection method that forces the use of Spanish.
+ * Creates a detection method that forces the use of a language.
  */
 
 function language_negotiation_force_language_negotiation_info() {
@@ -20,17 +37,38 @@ function language_negotiation_force_language_negotiation_info() {
       'file' => drupal_get_path('module', 'language_negotiation_force') . '/language_negotiation_force.module',
       'weight' => -20,
       'name' => t('Force Spanish language'),
-      'description' => t('Forces the use of Spanish language as default.'),
+      'description' => t('Forces the use of a language as default.'),
       'cache' => 0,
+      'config' => 'admin/config/regional/language/configure/force',
     ),
   );
 }
 
 /**
  * Callback for language selection in language_negotiation_force_language_negotiation_info.
- * It forces the use of Spanish.
- * @return string
+ * It forces selected language, but it defaults to English.
+ * @return string: forced language.
  */
 function language_negotiation_force_language_callback() {
-  return 'es';
+  return variable_get('language_negotiation_force_language', 'en');
+}
+
+function language_negotiation_force_form($form, &$form_state) {
+  // Getting defined languages, ordered by "enabled".
+  $lang = language_list('enabled');
+  $options = array();
+  // We'll only offer as options enabled languages.
+  foreach ($lang[1] as $code => $language) {
+    $options[$code] = $language->name;
+  }
+
+  $form['language_negotiation_force_language'] = array(
+    '#title' => t('Select language to force'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => variable_get('language_negotiation_force_language', 0),
+    '#description' => t('Select a language to force. It needs to be added and enabled'),
+  );
+
+  return system_settings_form($form);
 }

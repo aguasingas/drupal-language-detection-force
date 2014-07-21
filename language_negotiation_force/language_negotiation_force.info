@@ -1,4 +1,4 @@
-name = Language negotiation: force language.
+name = Language negotiation: Force language.
 description = Provides a language negotation method which forces a language.
 core = 7.x
 package = Locale
